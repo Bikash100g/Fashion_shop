@@ -1,10 +1,26 @@
 
 const express = require('express');
 const bodyParser = require('body-parser');
+const cors = require('cors'); 
 const connectDB = require('./db.js');
 const FashionShopData = require('./fashionSchema.js');
 
 const app = express();
+
+
+const FRONTEND_ORIGIN = process.env.FRONTEND_ORIGIN 
+  || 'https://crispy-train-5g464g6544qqh7w5j-3000.app.github.dev'; // no trailing slash
+
+app.use(cors({
+  origin: FRONTEND_ORIGIN,
+  methods: ['GET','POST','PUT','PATCH','DELETE','OPTIONS'],
+  allowedHeaders: ['Content-Type','Authorization'],
+  credentials: false // set true only if you use cookies/sessions
+}));
+
+
+
+
 app.use(bodyParser.json());
 connectDB();
 
@@ -104,4 +120,9 @@ app.get('/products-by-rating', async (req, res) => {
 });
 
 
-app.listen(5000, () => console.log('Server running on port 5000'));
+
+const PORT = process.env.PORT || 5000;      // <-- define PORT
+app.listen(PORT, '0.0.0.0', () => {
+  console.log(`Server running on port ${PORT}`);
+});
+
